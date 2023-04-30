@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.programasoft.application.main.MainRoute
 import com.programasoft.presentation.login.LoginClientRoute
 import com.programasoft.presentation.register.RegisterClientRoute
 
@@ -12,7 +13,7 @@ import com.programasoft.presentation.register.RegisterClientRoute
 fun ApplicationNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String = "login_client_route",
+    startDestination: String = "main_route",
 ) {
 
     NavHost(
@@ -34,6 +35,12 @@ fun ApplicationNavHost(
             "register_client_route",
         ) {
             RegisterClientRoute()
+        }
+
+        composable(
+            "main_route",
+        ) {
+            MainRoute()
         }
     }
 }
