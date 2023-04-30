@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "99620967270",
+    "project_id": "customer-reminder-3c66d",
+    "storage_bucket": "customer-reminder-3c66d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99620967270:android:05d902fc4fab1041c0aea7",
+        "android_client_info": {
+          "package_name": "com.programasoft.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99620967270-8midbjen9ub0vrgqi1a60s1f01tvj1mp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl8aMan0xNRMxNUjvbxsEi3pZGNsCSgmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "99620967270-8midbjen9ub0vrgqi1a60s1f01tvj1mp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99620967270:android:543fe5ed5b9d3680c0aea7",
+        "android_client_info": {
+          "package_name": "com.programasoft.customer.reminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99620967270-8midbjen9ub0vrgqi1a60s1f01tvj1mp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl8aMan0xNRMxNUjvbxsEi3pZGNsCSgmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "99620967270-8midbjen9ub0vrgqi1a60s1f01tvj1mp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99620967270:android:3adad4844ad4909ac0aea7",
+        "android_client_info": {
+          "package_name": "com.programasoft.presentation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99620967270-8midbjen9ub0vrgqi1a60s1f01tvj1mp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl8aMan0xNRMxNUjvbxsEi3pZGNsCSgmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "99620967270-8midbjen9ub0vrgqi1a60s1f01tvj1mp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

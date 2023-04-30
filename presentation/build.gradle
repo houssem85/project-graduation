@@ -1,0 +1,72 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'com.programasoft.presentation'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.2"
+    }
+}
+
+dependencies {
+
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.compose.foundation
+    implementation libs.androidx.compose.foundation.layout
+    implementation libs.androidx.compose.material.iconsExtended
+    implementation libs.androidx.compose.material3
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
+    debugImplementation libs.androidx.compose.ui.tooling
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.ui.util
+    implementation libs.androidx.compose.runtime
+    implementation libs.androidx.constraintlayout.compose
+
+    implementation libs.androidx.hilt.navigation.compose
+    implementation libs.androidx.lifecycle.runtimeCompose
+    implementation libs.androidx.lifecycle.viewModelCompose
+
+    implementation(project(path: ":data"))
+    // hilt
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+    // retrofit
+    implementation libs.okhttp.logging
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.gson
+
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+}
