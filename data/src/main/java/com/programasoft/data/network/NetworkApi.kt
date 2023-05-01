@@ -9,6 +9,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface NetworkApi {
     @POST(value = "accounts/login")
@@ -25,4 +26,7 @@ interface NetworkApi {
 
     @GET("psychologists")
     suspend fun getPsychologists(): Response<List<Psychologist>>
+
+    @GET("psychologists/{id}")
+    suspend fun getPsychologist(@Path("id") id: Int): Response<Psychologist>
 }

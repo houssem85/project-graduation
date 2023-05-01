@@ -2,8 +2,12 @@
 
 package com.programasoft.presentation.psychologists
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,7 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -41,11 +46,13 @@ import com.programasoft.presentation.R
 @Composable
 fun PsychologistsRoute(
     viewModel: PsychologistsViewModel = hiltViewModel(),
+    onClick: (Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     PsychologistsScreen(
         onTextChanged = viewModel::search,
-        psychologistsUiState = uiState
+        psychologistsUiState = uiState,
+        onClick = onClick
     )
 }
 
@@ -53,6 +60,7 @@ fun PsychologistsRoute(
 fun PsychologistsScreen(
     psychologistsUiState: PsychologistsUiState,
     onTextChanged: (TextFieldValue) -> Unit,
+    onClick: (Int) -> Unit,
 ) {
     val avenir = FontFamily(
         Font(R.font.avenir, FontWeight.Normal),
@@ -81,6 +89,7 @@ fun PsychologistsScreen(
                 Icon(imageVector = Icons.Filled.Search, contentDescription = null)
             }
         )
+        Spacer(modifier = Modifier.size(20.dp))
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,17 +100,28 @@ fun PsychologistsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White)
+                        .clickable {
+                            onClick(it.id.toInt())
+                        }
                 ) {
                     Spacer(modifier = Modifier.size(10.dp))
                     Row(
                     ) {
-                        Image(
-                            modifier = Modifier
-                                .size(60.dp)
-                                .background(Color.Red),
-                            painter = painterResource(id = R.drawable.logo),
-                            contentDescription = null
-                        )
+                        if (it.image.toBitmap() != null) {
+                            Image(
+                                modifier = Modifier
+                                    .size(60.dp),
+                                bitmap = it.image.toBitmap()!!.asImageBitmap(),
+                                contentDescription = null
+                            )
+                        } else {
+                            Image(
+                                modifier = Modifier
+                                    .size(60.dp),
+                                imageVector = Icons.Rounded.AccountCircle,
+                                contentDescription = null
+                            )
+                        }
                         Spacer(modifier = Modifier.size(10.dp))
                         Column(
                             modifier = Modifier.weight(1f)
@@ -152,5 +172,14 @@ fun PsychologistsScreen(
                 }
             }
         }
+    }
+}
+
+fun String.toBitmap(): Bitmap? {
+    if (this.isNotEmpty()) {
+        val decodedString = Base64.decode(this, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    } else {
+        return null
     }
 }

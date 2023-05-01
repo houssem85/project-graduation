@@ -5,7 +5,7 @@ data class Psychologist(
     val account: Account,
     val city: String,
     val fullAddress: String,
-    val image: String?,
+    val image: String = "",
     val phoneNumber: String,
     val presentation: String,
     val hourlyRate: Float,
