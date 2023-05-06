@@ -27,6 +27,9 @@ fun ApplicationNavHost(
             LoginClientRoute(
                 onSignUpClicked = {
                     navController.navigate("register_client_route")
+                },
+                onUserLoggedIn = {
+                    navController.navigate("main_route")
                 }
             )
         }

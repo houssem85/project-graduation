@@ -46,13 +46,14 @@ import com.programasoft.presentation.R
 fun LoginClientRoute(
     viewModel: LoginClientViewModel = hiltViewModel(),
     onSignUpClicked: () -> Unit = {},
+    onUserLoggedIn: () -> Unit = {},
 ) {
     val uiState: LoginClientUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(uiState.isLogged) {
         if (uiState.isLogged) {
-            Toast.makeText(context, "test", Toast.LENGTH_LONG).show()
+            onUserLoggedIn()
         }
     }
 

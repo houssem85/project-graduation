@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.programasoft.presentation.psychologistprofile.PsychologistProfileRoute
 import com.programasoft.presentation.psychologists.PsychologistsRoute
+import com.programasoft.presentation.reservation.ReservationRoute
 import com.programasoft.presentation.reservations.ReservationsRoute
 
 @Composable
@@ -25,7 +26,7 @@ fun MainNavHost(
         composable("psychologists_route") {
             PsychologistsRoute(
                 onClick = {
-                    navController.navigate("psychologist_profile/${it}")
+                    navController.navigate("psychologist_profile_route/${it}")
                 }
             )
         }
@@ -33,11 +34,20 @@ fun MainNavHost(
             ReservationsRoute()
         }
         composable(
-            "psychologist_profile/{psychologistId}",
+            "psychologist_profile_route/{psychologistId}",
             arguments = listOf(navArgument("psychologistId") { type = NavType.IntType })
         ) {
             PsychologistProfileRoute(
+                onClickReservation = {
+                    navController.navigate("reservation_route/$it")
+                }
             )
+        }
+        composable(
+            "reservation_route/{psychologistId}",
+            arguments = listOf(navArgument("psychologistId") { type = NavType.IntType })
+        ) {
+            ReservationRoute()
         }
     }
 }

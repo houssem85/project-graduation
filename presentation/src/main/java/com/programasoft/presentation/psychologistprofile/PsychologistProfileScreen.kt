@@ -2,6 +2,7 @@ package com.programasoft.presentation.psychologistprofile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -30,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.Font
@@ -47,10 +49,12 @@ import com.programasoft.presentation.psychologists.toBitmap
 @Composable
 fun PsychologistProfileRoute(
     viewModel: PsychologistProfileViewModel = hiltViewModel(),
+    onClickReservation: (Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     PsychologistProfileScreen(
-        uiState
+        psychologistProfileUiState = uiState,
+        onClickReservation = onClickReservation
     )
 }
 
@@ -58,6 +62,7 @@ fun PsychologistProfileRoute(
 @Composable
 fun PsychologistProfileScreen(
     psychologistProfileUiState: PsychologistProfileUiState,
+    onClickReservation: (Int) -> Unit,
 ) {
 
     val avenir = FontFamily(
@@ -91,10 +96,7 @@ fun PsychologistProfileScreen(
             }
             Spacer(modifier = Modifier.size(20.dp))
             Text(
-                text = it.account.fullName,
-                fontFamily = avenir,
-                fontSize = 26.sp,
-                color = Color(
+                text = it.account.fullName, fontFamily = avenir, fontSize = 26.sp, color = Color(
                     0XFF3F5AA6
                 )
             )
@@ -133,8 +135,7 @@ fun PsychologistProfileScreen(
 
                         },
                         colors = AssistChipDefaults.assistChipColors(
-                            labelColor = Color.Black,
-                            containerColor = Color.White
+                            labelColor = Color.Black, containerColor = Color.White
                         )
                     )
                 }
@@ -177,8 +178,7 @@ fun PsychologistProfileScreen(
             )
             Spacer(modifier = Modifier.size(6.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = Modifier
@@ -199,9 +199,7 @@ fun PsychologistProfileScreen(
                     Text(
                         "send message", color = Color(
                             0XFF3F5AA6
-                        ),
-                        fontFamily = avenir,
-                        fontSize = 12.sp
+                        ), fontFamily = avenir, fontSize = 12.sp
                     )
                 }
                 Spacer(
@@ -217,10 +215,14 @@ fun PsychologistProfileScreen(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            onClickReservation(psychologistProfileUiState.psychologist.id.toInt())
+                        }, horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {
+                        onClickReservation(psychologistProfileUiState.psychologist.id.toInt())
+                    }) {
                         Icon(
                             modifier = Modifier.size(80.dp),
                             imageVector = Icons.Outlined.BookOnline,
@@ -233,9 +235,7 @@ fun PsychologistProfileScreen(
                     Text(
                         "Reservation", color = Color(
                             0XFF3F5AA6
-                        ),
-                        fontFamily = avenir,
-                        fontSize = 12.sp
+                        ), fontFamily = avenir, fontSize = 12.sp
                     )
                 }
             }
