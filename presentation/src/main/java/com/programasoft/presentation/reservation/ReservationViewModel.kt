@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programasoft.data.network.NetworkApi
+import com.programasoft.data.network.model.CreateReservationRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,22 +67,18 @@ class ReservationViewModel @Inject constructor(
             val date = formatDate(date)
             try {
                 val response = network.getAvailableUnits(
-                    psychologistId,
-                    date
+                    psychologistId, date
                 )
                 if (response.code() == 200) {
                     _uiState.update {
-                        it.copy(
-                            availabilityUnits = response.body()!!.map {
-                                AvailabilityUnitUiState(
-                                    startDate = convertLocalDateTime(it.start),
-                                    endDate = convertLocalDateTime(it.end),
-                                    onClick = {
-
-                                    }
-                                )
-                            }
-                        )
+                        it.copy(availabilityUnits = response.body()!!.map {
+                            AvailabilityUnitUiState(id = it.id,
+                                startDate = convertLocalDateTime(it.start),
+                                endDate = convertLocalDateTime(it.end),
+                                onClick = {
+                                    onClick(it.id)
+                                })
+                        })
                     }
                 } else {
                     _uiState.update {
@@ -98,6 +95,89 @@ class ReservationViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun onClick(id: Long) {
+        _uiState.update {
+            val newList = arrayListOf<AvailabilityUnitUiState>()
+            newList.addAll(it.availabilityUnits.map {
+                if (it.id == id) {
+                    it.copy(
+                        isSelected = !it.isSelected
+                    )
+                } else {
+                    it.copy()
+                }
+            })
+            it.copy(
+                availabilityUnits = newList
+            )
+        }
+    }
+
+    fun validate() {
+        val test = areSelectedAvailabilityUnitsAdjacent(
+            _uiState.value.availabilityUnits
+        )
+        if (test) {
+            viewModelScope.launch {
+                try {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = true,
+                            errorMessage = ""
+                        )
+                    }
+                    val res =
+                        network.createReservation(reservationRequest = CreateReservationRequest(
+                            clientId = 52,
+                            _uiState.value.availabilityUnits.filter {
+                                it.isSelected
+                            }.map {
+                                it.id
+                            }.toSet()
+                        )
+                        )
+                    if (res.code() == 200) {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false, isReservationSuccess = true
+                            )
+                        }
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false, errorMessage = res.code().toString()
+                            )
+                        }
+                    }
+                } catch (ex: Exception) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false, errorMessage = ex.message!!
+                        )
+                    }
+                }
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    isLoading = false, errorMessage = "Plz select adjacents availabilities"
+                )
+            }
+        }
+    }
+
+    fun areSelectedAvailabilityUnitsAdjacent(units: List<AvailabilityUnitUiState>): Boolean {
+        val selectedUnits = units.filter { it.isSelected }.sortedBy { it.startDate }
+        for (i in 0 until selectedUnits.size - 1) {
+            val currentUnit = selectedUnits[i]
+            val nextUnit = selectedUnits[i + 1]
+            if (currentUnit.endDate != nextUnit.startDate) {
+                return false
+            }
+        }
+        return true
     }
 }
 
@@ -127,11 +207,18 @@ data class ReservationUiState(
 )
 
 data class AvailabilityUnitUiState(
+    val id: Long,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
-    val isSelected: Boolean = false,
+    var isSelected: Boolean = false,
     val onClick: () -> Unit,
 )
+
+fun AvailabilityUnitUiState.getTimeRange(): String {
+    val start = startDate.format(DateTimeFormatter.ofPattern("HH:mm"))
+    val end = endDate.format(DateTimeFormatter.ofPattern("HH:mm"))
+    return "$start -> $end"
+}
 
 fun formatDate(timestamp: Long): String {
     val instant = Instant.ofEpochMilli(timestamp)

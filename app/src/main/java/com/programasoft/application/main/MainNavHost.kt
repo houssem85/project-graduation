@@ -47,7 +47,9 @@ fun MainNavHost(
             "reservation_route/{psychologistId}",
             arguments = listOf(navArgument("psychologistId") { type = NavType.IntType })
         ) {
-            ReservationRoute()
+            ReservationRoute(onReservationSuccess = {
+                navController.popBackStack()
+            })
         }
     }
 }
