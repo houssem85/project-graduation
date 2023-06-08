@@ -1,6 +1,6 @@
 package com.programasoft.presentation.login
 
-import android.widget.Toast
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -44,25 +43,32 @@ import com.programasoft.presentation.R
 
 @Composable
 fun LoginClientRoute(
-    viewModel: LoginClientViewModel = hiltViewModel(),
-    onSignUpClicked: () -> Unit = {},
-    onUserLoggedIn: () -> Unit = {},
+        viewModel: LoginClientViewModel = hiltViewModel(),
+        onSignUpClicked: () -> Unit = {},
+        onUserLoggedIn: () -> Unit = {},
 ) {
     val uiState: LoginClientUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(uiState.isLogged) {
         if (uiState.isLogged) {
+            val sharedPref = context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putLong("account_id", uiState.client!!.account.id)
+                putLong("client_id", uiState.client!!.id)
+                putString("role","client")
+                apply()
+            }
             onUserLoggedIn()
         }
     }
 
     LoginClientScreen(
-        uiState,
-        viewModel::enterEmail,
-        viewModel::enterPassword,
-        viewModel::login,
-        onSignUpClicked = onSignUpClicked
+            uiState,
+            viewModel::enterEmail,
+            viewModel::enterPassword,
+            viewModel::login,
+            onSignUpClicked = onSignUpClicked
     )
 }
 
@@ -70,101 +76,101 @@ fun LoginClientRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginClientScreen(
-    uiState: LoginClientUiState,
-    onEmailChanged: (TextFieldValue) -> Unit,
-    onPasswordChanged: (TextFieldValue) -> Unit,
-    onLogInClicked: () -> Unit = {},
-    onSignUpClicked: () -> Unit = {},
+        uiState: LoginClientUiState,
+        onEmailChanged: (TextFieldValue) -> Unit,
+        onPasswordChanged: (TextFieldValue) -> Unit,
+        onLogInClicked: () -> Unit = {},
+        onSignUpClicked: () -> Unit = {},
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(20.dp)
+            modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(20.dp)
 
     ) {
         Text(
-            text = "sign in",
-            fontSize = 32.sp,
-            color = Color(0xFF3F5AA6),
+                text = "sign in",
+                fontSize = 32.sp,
+                color = Color(0xFF3F5AA6),
         )
         Spacer(modifier = Modifier.size(40.dp))
         Image(
-            modifier = Modifier
-                .size(200.dp)
-                .align(Alignment.CenterHorizontally),
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = null
+                modifier = Modifier
+                        .size(200.dp)
+                        .align(Alignment.CenterHorizontally),
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = null
         )
         val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF3F5AA6),
-            cursorColor = Color(0xFF3F5AA6)
+                focusedBorderColor = Color(0xFF3F5AA6),
+                cursorColor = Color(0xFF3F5AA6)
         )
         Spacer(modifier = Modifier.size(20.dp))
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = uiState.email,
-            onValueChange = onEmailChanged,
-            label = { Text("email") },
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            colors = textFieldColors
+                modifier = Modifier.fillMaxWidth(),
+                value = uiState.email,
+                onValueChange = onEmailChanged,
+                label = { Text("email") },
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                colors = textFieldColors
         )
         Spacer(modifier = Modifier.size(20.dp))
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = uiState.password,
-            onValueChange = onPasswordChanged,
-            label = { Text("password") },
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-            colors = textFieldColors,
-            visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(),
+                value = uiState.password,
+                onValueChange = onPasswordChanged,
+                label = { Text("password") },
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                colors = textFieldColors,
+                visualTransformation = PasswordVisualTransformation(),
         )
 
         Spacer(modifier = Modifier.size(20.dp))
         val customButtonColors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF3F5AA6),
+                containerColor = Color(0xFF3F5AA6),
         )
         Button(
-            shape = RoundedCornerShape(6.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            colors = customButtonColors,
-            onClick = onLogInClicked
+                shape = RoundedCornerShape(6.dp),
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                colors = customButtonColors,
+                onClick = onLogInClicked
         ) {
             Text("Log in")
         }
         Spacer(modifier = Modifier.size(20.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "If you don't have an account",
-                color = Color.Black,
-                fontSize = 16.sp,
+                    text = "If you don't have an account",
+                    color = Color.Black,
+                    fontSize = 16.sp,
             )
             Spacer(modifier = Modifier.size(10.dp))
             Text(
-                modifier = Modifier.clickable {
-                    onSignUpClicked.invoke()
-                },
-                text = "Sign up",
-                color = Color(0xFF3F5AA6),
-                fontSize = 16.sp,
+                    modifier = Modifier.clickable {
+                        onSignUpClicked.invoke()
+                    },
+                    text = "Sign up",
+                    color = Color(0xFF3F5AA6),
+                    fontSize = 16.sp,
             )
         }
         Spacer(modifier = Modifier.size(20.dp))
         if (uiState.errorMessage.isNotEmpty()) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = uiState.errorMessage,
-                color = Color.Red,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
+                    modifier = Modifier.fillMaxWidth(),
+                    text = uiState.errorMessage,
+                    color = Color.Red,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
             )
         }
     }
@@ -174,7 +180,7 @@ fun LoginClientScreen(
 @Composable
 fun LoginClientScreenPreview() {
     LoginClientScreen(
-        LoginClientUiState(),
-        {}, {}
+            LoginClientUiState(),
+            {}, {}
     )
 }

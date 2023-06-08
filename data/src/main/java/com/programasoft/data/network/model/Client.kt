@@ -2,5 +2,6 @@ package com.programasoft.data.network.model
 
 
 data class Client(
-    val account: Account,
+        val id: Long,
+        val account: Account,
 )

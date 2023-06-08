@@ -136,6 +136,7 @@ twilio-audio-switch = { group = "com.twilio", name = "audioswitch", version.ref 
 twilio-voice-android = { group = "com.twilio", name = "voice-android", version.ref = "voiceAndroid" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidxConstraintlayoutCompose" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }

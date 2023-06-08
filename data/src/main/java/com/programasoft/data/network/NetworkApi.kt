@@ -3,18 +3,22 @@ package com.programasoft.data.network
 import com.programasoft.data.network.model.AvailabilityUnit
 import com.programasoft.data.network.model.Client
 import com.programasoft.data.network.model.CreateReservationRequest
+import com.programasoft.data.network.model.GetStatusResponse
 import com.programasoft.data.network.model.LoginResponse
+import com.programasoft.data.network.model.PaymeeResponce
 import com.programasoft.data.network.model.Psychologist
+import com.programasoft.data.network.model.TransactionResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface NetworkApi {
     @POST(value = "accounts/login")
@@ -51,4 +55,33 @@ interface NetworkApi {
     suspend fun createReservation(
         @Body reservationRequest: CreateReservationRequest,
     ): Response<ResponseBody>
+
+    @GET("accounts/{id}/balance")
+    suspend fun getBalance(
+        @Path("id") accountId: Long,
+    ): Response<Double>
+
+    @POST
+    suspend fun doPayment(
+        @Url url: String,
+        @Body json: com.google.gson.JsonObject,
+        @Header("authorization") auth: String
+    ): Response<PaymeeResponce>
+
+
+    @GET
+    suspend fun getPaymentStatus(
+        @Url url: String,
+        @Header("authorization") auth: String
+    ): Response<GetStatusResponse>
+
+    @POST("transactions")
+    suspend fun paymentStore(
+        @Body json: com.google.gson.JsonObject,
+    ): Response<ResponseBody>
+
+    @GET("transactions/recent/{accountId}")
+    suspend fun getPaymentHistory(
+        @Path("accountId") accountId: Long,
+    ): Response<List<TransactionResponse>>
 }

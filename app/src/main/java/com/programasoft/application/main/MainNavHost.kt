@@ -7,6 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.programasoft.presentation.accountbalancetransaction.AccountBalanceTransactionRoute
+import com.programasoft.presentation.paymee.PaymeeRoute
 import com.programasoft.presentation.psychologistprofile.PsychologistProfileRoute
 import com.programasoft.presentation.psychologists.PsychologistsRoute
 import com.programasoft.presentation.reservation.ReservationRoute
@@ -48,6 +50,23 @@ fun MainNavHost(
             arguments = listOf(navArgument("psychologistId") { type = NavType.IntType })
         ) {
             ReservationRoute(onReservationSuccess = {
+                navController.popBackStack()
+            })
+        }
+        composable(
+            "balance_route"
+        ) {
+            AccountBalanceTransactionRoute(
+                onEnterAmount = {
+                    navController.navigate("paymee_route/$it")
+                }
+            )
+        }
+        composable(
+            "paymee_route/{amount}",
+            arguments = listOf(navArgument("amount") { type = NavType.FloatType })
+        ) {
+            PaymeeRoute(onFinish = {
                 navController.popBackStack()
             })
         }

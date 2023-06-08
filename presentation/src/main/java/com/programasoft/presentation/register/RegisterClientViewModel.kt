@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterClientViewModel @Inject constructor(
-    private val networkApi: NetworkApi,
+        private val networkApi: NetworkApi,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RegisterClientUiState())
     val uiState: StateFlow<RegisterClientUiState> = _uiState
@@ -29,8 +29,8 @@ class RegisterClientViewModel @Inject constructor(
     fun enterEmail(email: TextFieldValue) {
         _uiState.update {
             it.copy(
-                email = email,
-                errorMessage = ""
+                    email = email,
+                    errorMessage = ""
             )
         }
     }
@@ -38,8 +38,8 @@ class RegisterClientViewModel @Inject constructor(
     fun enterPassword(password: TextFieldValue) {
         _uiState.update {
             it.copy(
-                password = password,
-                errorMessage = ""
+                    password = password,
+                    errorMessage = ""
             )
         }
     }
@@ -47,8 +47,8 @@ class RegisterClientViewModel @Inject constructor(
     fun enterFullName(fullName: TextFieldValue) {
         _uiState.update {
             it.copy(
-                fullName = fullName,
-                errorMessage = ""
+                    fullName = fullName,
+                    errorMessage = ""
             )
         }
     }
@@ -65,40 +65,41 @@ class RegisterClientViewModel @Inject constructor(
                 viewModelScope.launch {
                     try {
                         val account = Account(
-                            id = 0,
-                            email = email,
-                            password = password,
-                            fullName = fullName,
-                            connectedDeviceId = token
+                                id = 0,
+                                email = email,
+                                password = password,
+                                fullName = fullName,
+                                connectedDeviceId = token
                         )
                         val client = Client(
-                            account = account
+                                id = 0,
+                                account = account
                         )
                         val response = networkApi.register(client)
                         if (response.code() == 200) {
                             _uiState.update {
                                 it.copy(
-                                    isSuccess = true,
-                                    errorMessage = ""
+                                        isSuccess = true,
+                                        errorMessage = ""
                                 )
                             }
                         } else if (response.code() == 409) {
                             _uiState.update {
                                 it.copy(
-                                    errorMessage = "this email already used"
+                                        errorMessage = "this email already used"
                                 )
                             }
                         } else {
                             _uiState.update {
                                 it.copy(
-                                    errorMessage = "error ${response.code()}"
+                                        errorMessage = "error ${response.code()}"
                                 )
                             }
                         }
                     } catch (ex: Exception) {
                         _uiState.update {
                             it.copy(
-                                errorMessage = ex.message!!
+                                    errorMessage = ex.message!!
                             )
                         }
                     }
@@ -106,7 +107,7 @@ class RegisterClientViewModel @Inject constructor(
             } else {
                 _uiState.update {
                     it.copy(
-                        errorMessage = "Your form contains errors. Please correct them"
+                            errorMessage = "Your form contains errors. Please correct them"
                     )
                 }
             }
@@ -120,10 +121,10 @@ private fun isValidEmail(email: String): Boolean {
 }
 
 data class RegisterClientUiState(
-    val email: TextFieldValue = TextFieldValue(),
-    val password: TextFieldValue = TextFieldValue(),
-    val fullName: TextFieldValue = TextFieldValue(),
-    val isSuccess: Boolean = false,
-    val errorMessage: String = "",
+        val email: TextFieldValue = TextFieldValue(),
+        val password: TextFieldValue = TextFieldValue(),
+        val fullName: TextFieldValue = TextFieldValue(),
+        val isSuccess: Boolean = false,
+        val errorMessage: String = "",
 )
 

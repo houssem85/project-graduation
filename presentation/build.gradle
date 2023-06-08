@@ -69,4 +69,5 @@ dependencies {
     implementation libs.retrofit.converter.gson
 
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation libs.accompanist.webview
 }
