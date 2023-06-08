@@ -59,7 +59,7 @@ interface NetworkApi {
     @GET("accounts/{id}/balance")
     suspend fun getBalance(
         @Path("id") accountId: Long,
-    ): Response<Double>
+    ): Response<Map<String, Double>>
 
     @POST
     suspend fun doPayment(

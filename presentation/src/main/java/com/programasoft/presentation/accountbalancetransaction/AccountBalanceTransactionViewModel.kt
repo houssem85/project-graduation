@@ -31,10 +31,13 @@ class AccountBalanceTransactionViewModel @Inject constructor(
                 val balanceRes = networkApi.getBalance(accountId)
                 val listRes = networkApi.getPaymentHistory(accountId)
                 if (balanceRes.code() == 200 && listRes.code() == 200) {
+                    val map = balanceRes.body()!!
                     _uiState.update {
                         AccountBalanceTransactionUiState(
                             loading = false,
-                            balance = balanceRes.body()!!,
+                            balance = map["balance"]!!,
+                            creditBalance = map["creditBalance"]!!,
+                            debitBalance = map["debitBalance"]!!,
                             items = listRes.body()!!
                         )
                     }
@@ -66,5 +69,7 @@ class AccountBalanceTransactionViewModel @Inject constructor(
 data class AccountBalanceTransactionUiState(
     val loading: Boolean = true,
     val balance: Double = 0.0,
+    val creditBalance: Double = 0.0,
+    val debitBalance: Double = 0.0,
     val items: List<TransactionResponse> = emptyList()
 )

@@ -168,7 +168,7 @@ fun AccountBalanceTransactionScreen(
                         .weight(1f)
                 ) {
                     Text(
-                        text = priceFormat(uiState.balance),
+                        text = priceFormat(uiState.creditBalance),
                         color = Color.Black,
                         fontSize = 24.sp
                     )
@@ -185,7 +185,7 @@ fun AccountBalanceTransactionScreen(
                         .weight(1f)
                 ) {
                     Text(
-                        text = priceFormat(uiState.balance),
+                        text = priceFormat(uiState.debitBalance),
                         color = Color.Black,
                         fontSize = 24.sp
                     )
