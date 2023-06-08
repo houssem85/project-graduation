@@ -77,7 +77,7 @@ fun PsychologistsScreen(
         TextField(
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White,
-                textColor = Color.Black,
+                focusedTextColor = Color.Black,
                 cursorColor = Color(0xFF3F5AA6),
                 focusedIndicatorColor = Color(0xFF3F5AA6)
             ),

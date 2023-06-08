@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.programasoft.presentation.reservation
 
@@ -23,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -61,6 +61,7 @@ fun ReservationRoute(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservationScreen(
     reservationUiState: ReservationUiState,
@@ -81,7 +82,13 @@ fun ReservationScreen(
                     .matchParentSize()
             ) {
                 item {
-                    val datePickerState = rememberDatePickerState()
+                    val datePickerState = rememberDatePickerState(
+                        selectableDates = object : SelectableDates{
+                            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                                return reservationUiState.availableDates.contains(utcTimeMillis)
+                            }
+                        }
+                    )
                     LaunchedEffect(datePickerState.selectedDateMillis) {
                         datePickerState.selectedDateMillis?.let {
                             onSelectDate(
@@ -94,9 +101,6 @@ fun ReservationScreen(
                         modifier = Modifier
                             .padding(horizontal = 16.dp),
                         showModeToggle = false,
-                        dateValidator = { date ->
-                            reservationUiState.availableDates.contains(date)
-                        }
                     )
                 }
                 item {

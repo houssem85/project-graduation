@@ -16,3 +16,4 @@ rootProject.name = "Application"
 include ':app'
 include ':data'
 include ':presentation'
+include ':app-psychologist'
