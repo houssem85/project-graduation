@@ -1,5 +1,7 @@
 package com.programasoft.data.network
 
+import com.programasoft.data.network.model.AvailabilityGroup
+import com.programasoft.data.network.model.AvailabilityRequest
 import com.programasoft.data.network.model.AvailabilityUnit
 import com.programasoft.data.network.model.Client
 import com.programasoft.data.network.model.CreateReservationRequest
@@ -84,4 +86,14 @@ interface NetworkApi {
     suspend fun getPaymentHistory(
         @Path("accountId") accountId: Long,
     ): Response<List<TransactionResponse>>
+
+    @POST("availabilities")
+    suspend fun createAvailabilities(
+        @Body json: AvailabilityRequest,
+    ): Response<ResponseBody>
+
+    @GET("availabilities/by-psychologist/{psychologistId}")
+    suspend fun getAvailabilityGroups(
+        @Path("psychologistId") psychologistId: Long,
+    ): Response<List<AvailabilityGroup>>
 }

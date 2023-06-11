@@ -49,7 +49,11 @@ fun MainNavHost(
         composable(
             "new_availability_group_route"
         ) {
-            NewAvailabilityGroupRoute()
+            NewAvailabilityGroupRoute(
+                onFinish = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
