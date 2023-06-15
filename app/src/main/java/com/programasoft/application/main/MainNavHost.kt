@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.programasoft.presentation.accountbalancetransaction.AccountBalanceTransactionRoute
+import com.programasoft.presentation.join.JoinRoute
 import com.programasoft.presentation.paymee.PaymeeRoute
 import com.programasoft.presentation.psychologistprofile.PsychologistProfileRoute
 import com.programasoft.presentation.psychologists.PsychologistsRoute
@@ -42,6 +43,8 @@ fun MainNavHost(
             PsychologistProfileRoute(
                 onClickReservation = {
                     navController.navigate("reservation_route/$it")
+                }, onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -50,6 +53,8 @@ fun MainNavHost(
             arguments = listOf(navArgument("psychologistId") { type = NavType.IntType })
         ) {
             ReservationRoute(onReservationSuccess = {
+                navController.popBackStack()
+            }, onBackClicked = {
                 navController.popBackStack()
             })
         }
@@ -69,6 +74,11 @@ fun MainNavHost(
             PaymeeRoute(onFinish = {
                 navController.popBackStack()
             })
+        }
+        composable(
+            "join_route",
+        ) {
+            JoinRoute()
         }
     }
 }

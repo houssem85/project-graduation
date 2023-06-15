@@ -9,6 +9,8 @@ import com.programasoft.data.network.model.GetStatusResponse
 import com.programasoft.data.network.model.LoginResponse
 import com.programasoft.data.network.model.PaymeeResponce
 import com.programasoft.data.network.model.Psychologist
+import com.programasoft.data.network.model.ReservationReadyResponse
+import com.programasoft.data.network.model.ReservationResponse
 import com.programasoft.data.network.model.TransactionResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -96,4 +98,21 @@ interface NetworkApi {
     suspend fun getAvailabilityGroups(
         @Path("psychologistId") psychologistId: Long,
     ): Response<List<AvailabilityGroup>>
+
+    @GET("reservations/client/{clientId}")
+    suspend fun getReservations(
+        @Path("clientId") clientId: Long,
+        @Query("isPaid") isPaid: Boolean = true,
+    ): Response<List<ReservationResponse>>
+
+    @FormUrlEncoded
+    @POST("transactions/payment-reservation")
+    suspend fun paymentReservation(
+        @Field("reservation_id") reservationId: Long
+    ): Response<ResponseBody>
+
+    @GET("reservations/ready/client/{clientId}")
+    suspend fun getReadyReservations(
+        @Path("clientId") clientId: Long
+    ): Response<List<ReservationReadyResponse>>
 }

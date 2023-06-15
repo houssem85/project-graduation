@@ -1,25 +1,31 @@
-
 package com.programasoft.presentation.reservation
 
+import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
@@ -32,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,13 +49,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun ReservationRoute(
     viewModel: ReservationViewModel = hiltViewModel(),
     onReservationSuccess: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState.isReservationSuccess) {
         if (uiState.isReservationSuccess) {
-            Toast.makeText(context, "reservation success", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Success! Reservation complete", Toast.LENGTH_LONG).show()
             onReservationSuccess()
         }
     }
@@ -56,7 +64,13 @@ fun ReservationRoute(
     ReservationScreen(
         reservationUiState = uiState,
         onSelectDate = viewModel::selectDate,
-        onValidateClick = viewModel::validate
+        onValidateClick = {
+            val sharedPref =
+                context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
+            val clientId = sharedPref.getLong("client_id", 0)
+            viewModel.validate(clientId)
+        },
+        onBackClicked = onBackClicked
     )
 }
 
@@ -67,6 +81,7 @@ fun ReservationScreen(
     reservationUiState: ReservationUiState,
     onSelectDate: (Long) -> Unit = {},
     onValidateClick: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
@@ -82,8 +97,35 @@ fun ReservationScreen(
                     .matchParentSize()
             ) {
                 item {
+                    Box(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .fillMaxWidth()
+                            .background(Color(0xFF3F5AA6))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBackIos,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(start = 10.dp)
+                                .clickable {
+                                    onBackClicked.invoke()
+                                },
+                            tint = Color.White
+                        )
+                        Text(
+                            text = "New Reservation",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
+                item {
                     val datePickerState = rememberDatePickerState(
-                        selectableDates = object : SelectableDates{
+                        selectableDates = object : SelectableDates {
                             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                                 return reservationUiState.availableDates.contains(utcTimeMillis)
                             }
@@ -101,6 +143,10 @@ fun ReservationScreen(
                         modifier = Modifier
                             .padding(horizontal = 16.dp),
                         showModeToggle = false,
+                        colors = DatePickerDefaults.colors(
+                            selectedDayContainerColor = Color(0xFFA68B3F),
+                            todayDateBorderColor = Color(0xFFA68B3F)
+                        )
                     )
                 }
                 item {
@@ -156,31 +202,33 @@ fun ReservationScreen(
                     val test = reservationUiState.availabilityUnits.any {
                         it.isSelected
                     }
-                    if (reservationUiState.errorMessage.isNotEmpty()) {
-                        Spacer(modifier = Modifier.size(6.dp))
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = reservationUiState.errorMessage,
-                            color = Color.Red,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    if (test) {
-                        Spacer(modifier = Modifier.size(20.dp))
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            Button(
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF3F5AA6)
-                                ),
-                                modifier = Modifier.align(Alignment.Center),
-                                onClick = onValidateClick
-                            ) {
-                                Text(text = "Validate")
-                            }
+                    Spacer(modifier = Modifier.size(6.dp))
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = reservationUiState.errorMessage,
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.size(20.dp))
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFA68B3F),
+                                disabledContainerColor = Color(0xFFA68B3F).copy(0.5f)
+                            ),
+                            shape = RoundedCornerShape(6.dp),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp),
+                            enabled = test,
+                            onClick = onValidateClick
+                        ) {
+                            Text(text = "Validate")
                         }
-                        Spacer(modifier = Modifier.size(20.dp))
                     }
+                    Spacer(modifier = Modifier.size(20.dp))
                 }
             }
         }

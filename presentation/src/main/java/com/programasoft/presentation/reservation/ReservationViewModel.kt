@@ -115,7 +115,7 @@ class ReservationViewModel @Inject constructor(
         }
     }
 
-    fun validate() {
+    fun validate(clientId : Long) {
         val test = areSelectedAvailabilityUnitsAdjacent(
             _uiState.value.availabilityUnits
         )
@@ -130,7 +130,7 @@ class ReservationViewModel @Inject constructor(
                     }
                     val res =
                         network.createReservation(reservationRequest = CreateReservationRequest(
-                            clientId = 52,
+                            clientId = clientId,
                             _uiState.value.availabilityUnits.filter {
                                 it.isSelected
                             }.map {
