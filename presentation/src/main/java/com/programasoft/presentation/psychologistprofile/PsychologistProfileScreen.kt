@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -47,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.presentation.R
 import com.programasoft.presentation.psychologists.toBitmap
+import com.programasoft.presentation.utils.roboto
 
 
 @Composable
@@ -71,12 +73,6 @@ fun PsychologistProfileScreen(
     onBackClicked: () -> Unit,
 ) {
 
-    val avenir = FontFamily(
-        Font(R.font.avenir, FontWeight.Normal),
-        Font(R.font.avenir, FontWeight.Light),
-        Font(R.font.avenir, FontWeight.SemiBold),
-        Font(R.font.avenir, FontWeight.ExtraBold)
-    )
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -98,31 +94,31 @@ fun PsychologistProfileScreen(
                     )
                 } else {
                     Image(
-                        modifier = Modifier.size(60.dp),
+                        modifier = Modifier.size(90.dp),
                         imageVector = Icons.Rounded.AccountCircle,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
                 Spacer(modifier = Modifier.size(20.dp))
                 Text(
                     text = it.account.fullName,
-                    fontFamily = avenir,
+                    fontFamily = roboto,
                     fontSize = 26.sp,
                     color = Color(
                         0XFF3F5AA6
-                    )
+                    ),
+                    fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(
                     text = it.fullAddress,
-                    fontFamily = avenir,
-                    color = Color(
-                        0xFF828899
-                    ),
+                    fontFamily = roboto,
+                    color = Color.Black,
                     maxLines = 1,
                     fontSize = 13.sp,
                     lineHeight = 16.sp,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Normal
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 Text(
@@ -130,8 +126,9 @@ fun PsychologistProfileScreen(
                         .fillMaxWidth()
                         .align(Alignment.Start),
                     text = "DOMAINS",
-                    fontFamily = avenir,
+                    fontFamily = roboto,
                     fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color(
                         0XFF3F5AA6
                     )
@@ -149,7 +146,7 @@ fun PsychologistProfileScreen(
 
                             },
                             colors = AssistChipDefaults.assistChipColors(
-                                labelColor = Color.Black, containerColor = Color.White
+                                labelColor = Color.White, containerColor = Color(0xFFA68B3F)
                             )
                         )
                     }
@@ -160,8 +157,9 @@ fun PsychologistProfileScreen(
                         .fillMaxWidth()
                         .align(Alignment.Start),
                     text = "HOURLY RATE",
-                    fontFamily = avenir,
+                    fontFamily = roboto,
                     fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color(
                         0XFF3F5AA6
                     )
@@ -169,12 +167,11 @@ fun PsychologistProfileScreen(
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
                     text = "${it.hourlyRate} DT per hour",
-                    fontFamily = avenir,
-                    color = Color(
-                        0xFF828899
-                    ),
+                    fontFamily = roboto,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
                     maxLines = 1,
-                    fontSize = 13.sp,
+                    fontSize = 16.sp,
                     lineHeight = 16.sp,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.align(Alignment.Start)
@@ -214,7 +211,7 @@ fun PsychologistProfileScreen(
                         Text(
                             "send message", color = Color(
                                 0XFF3F5AA6
-                            ), fontFamily = avenir, fontSize = 12.sp
+                            ), fontFamily = roboto, fontSize = 12.sp
                         )
                     }
                     Spacer(
@@ -250,7 +247,7 @@ fun PsychologistProfileScreen(
                         Text(
                             "Reservation", color = Color(
                                 0XFF3F5AA6
-                            ), fontFamily = avenir, fontSize = 12.sp
+                            ), fontFamily = roboto, fontSize = 12.sp
                         )
                     }
                 }
@@ -271,7 +268,8 @@ fun PsychologistProfileScreen(
                         .fillMaxWidth()
                         .align(Alignment.Start),
                     text = "PRESENTATION",
-                    fontFamily = avenir,
+                    fontFamily = roboto,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = Color(
                         0XFF3F5AA6
@@ -283,11 +281,10 @@ fun PsychologistProfileScreen(
                         .fillMaxWidth()
                         .align(Alignment.Start),
                     text = it.presentation,
-                    fontFamily = avenir,
+                    fontFamily = roboto,
+                    fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
-                    color = Color(
-                        0XFF828899
-                    )
+                    color = Color.Black,
                 )
             }
         }
@@ -311,6 +308,7 @@ fun PsychologistProfileScreen(
             Text(
                 text = "Psychologist Profile",
                 color = Color.White,
+                fontFamily = roboto,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.Center)

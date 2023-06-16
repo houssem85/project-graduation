@@ -2,6 +2,7 @@
 
 package com.programasoft.presentation.register
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,11 +21,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -34,12 +38,30 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.presentation.R
+import com.programasoft.presentation.utils.roboto
 
 @Composable
 fun RegisterClientRoute(
     viewModel: RegisterClientViewModel = hiltViewModel(),
+    onUserLoggedIn: () -> Unit,
 ) {
     val uiState: RegisterClientUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+
+    LaunchedEffect(uiState) {
+        if (uiState.isSuccess) {
+            val sharedPref =
+                context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putLong("account_id", uiState.client!!.account.id)
+                putLong("client_id", uiState.client!!.id)
+                putString("role", "client")
+                apply()
+            }
+            onUserLoggedIn()
+        }
+    }
 
     RegisterClientScreen(
         uiState = uiState,
@@ -66,7 +88,9 @@ private fun RegisterClientScreen(
 
     ) {
         Text(
-            text = "sign up",
+            text = "Sign up",
+            fontFamily = roboto,
+            fontWeight = FontWeight.Bold,
             fontSize = 32.sp,
             color = Color(0xFF3F5AA6),
         )
@@ -80,9 +104,10 @@ private fun RegisterClientScreen(
         )
         val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color(0xFF3F5AA6),
-            cursorColor = Color(0xFF3F5AA6)
+            cursorColor = Color(0xFF3F5AA6),
+            focusedLabelColor = Color(0xFF3F5AA6)
         )
-        Spacer(modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.size(40.dp))
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.fullName,
@@ -127,7 +152,7 @@ private fun RegisterClientScreen(
             colors = customButtonColors,
             onClick = onSignUpClicked
         ) {
-            Text("Sign up")
+            Text("Sign up", fontSize = 18.sp, fontFamily = roboto, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.size(20.dp))
         if (uiState.errorMessage.isNotEmpty()) {
@@ -135,7 +160,9 @@ private fun RegisterClientScreen(
                 modifier = Modifier.fillMaxWidth(),
                 text = uiState.errorMessage,
                 color = Color.Red,
-                fontSize = 14.sp,
+                fontFamily = roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
         }

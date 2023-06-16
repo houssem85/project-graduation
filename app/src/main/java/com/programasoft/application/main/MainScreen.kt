@@ -12,12 +12,16 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun MainRoute(
-    onJoinConsultation: (Long) -> Unit
+    onJoinConsultation: (Long) -> Unit,
+    onBackClicked: () -> Unit,
+    onLogOutClicked: () -> Unit
 ) {
     val navController = rememberNavController()
     MainScreen(
         navController,
-        onJoinConsultation
+        onJoinConsultation,
+        onBackClicked = onBackClicked,
+        onLogOutClicked = onLogOutClicked
     )
 }
 
@@ -25,7 +29,9 @@ fun MainRoute(
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    onJoinConsultation: (Long) -> Unit
+    onJoinConsultation: (Long) -> Unit,
+    onLogOutClicked: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
@@ -34,7 +40,9 @@ fun MainScreen(
         MainNavHost(
             navController = navController,
             modifier = Modifier.padding(paddingValues = it),
-            onJoinConsultation = onJoinConsultation
+            onJoinConsultation = onJoinConsultation,
+            onLogOutClicked = onLogOutClicked,
+            onBackClicked = onBackClicked
         )
     }
 }

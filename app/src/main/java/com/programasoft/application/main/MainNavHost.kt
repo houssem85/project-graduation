@@ -21,7 +21,9 @@ fun MainNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     startDestination: String = "psychologists_route",
-    onJoinConsultation: (Long) -> Unit
+    onJoinConsultation: (Long) -> Unit,
+    onLogOutClicked: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -32,7 +34,9 @@ fun MainNavHost(
             PsychologistsRoute(
                 onClick = {
                     navController.navigate("psychologist_profile_route/${it}")
-                }
+                },
+                onBackClicked = onBackClicked,
+                onLogOutClicked = onLogOutClicked
             )
         }
         composable("reservations_route") {

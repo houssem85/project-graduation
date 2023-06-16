@@ -3,6 +3,7 @@ package com.programasoft.application.main
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookOnline
 import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -13,8 +14,8 @@ enum class TopLevelDestination(
     val screenRoute: String,
 ) {
     PSYCHOLOGISTS(
-        icon = Icons.Filled.Group,
-        titleText = "Psychologists",
+        icon = Icons.Filled.Home,
+        titleText = "Home",
         screenRoute = "psychologists_route"
     ),
     JOIN(

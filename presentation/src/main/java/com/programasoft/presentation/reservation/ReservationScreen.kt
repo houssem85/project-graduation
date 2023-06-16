@@ -38,12 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.programasoft.presentation.utils.roboto
 
 @Composable
 fun ReservationRoute(
@@ -117,8 +119,9 @@ fun ReservationScreen(
                         Text(
                             text = "New Reservation",
                             color = Color.White,
-                            fontSize = 20.sp,
+                            fontFamily = roboto,
                             fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
@@ -159,12 +162,14 @@ fun ReservationScreen(
                     ) {
                         val availabilityUnit = reservationUiState.availabilityUnits[it]
                         AssistChip(
+                            shape = RoundedCornerShape(6.dp),
                             onClick = {
                                 availabilityUnit.onClick.invoke()
                             },
                             label = {
                                 Text(
                                     textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
                                     modifier = Modifier.fillMaxSize(),
                                     text = availabilityUnit.getTimeRange()
                                 )
@@ -206,8 +211,10 @@ fun ReservationScreen(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = reservationUiState.errorMessage,
+                        fontFamily = roboto,
+                        fontSize = 16.sp,
                         color = Color.Red,
-                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.size(20.dp))
@@ -221,11 +228,17 @@ fun ReservationScreen(
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .fillMaxWidth()
+                                .height(50.dp)
                                 .padding(horizontal = 20.dp),
                             enabled = test,
                             onClick = onValidateClick
                         ) {
-                            Text(text = "Validate")
+                            Text(
+                                text = "Validate",
+                                fontSize = 18.sp,
+                                fontFamily = roboto,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.size(20.dp))

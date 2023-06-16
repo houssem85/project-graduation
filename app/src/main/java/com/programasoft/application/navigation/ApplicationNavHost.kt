@@ -26,6 +26,7 @@ fun ApplicationNavHost(
         val sharedPref = context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
         val clientId = sharedPref.getLong("client_id", 0)
         if (clientId != 0L) {
+            navController.popBackStack()
             navController.navigate("main_route")
         }
     }
@@ -43,6 +44,7 @@ fun ApplicationNavHost(
                     navController.navigate("register_client_route")
                 },
                 onUserLoggedIn = {
+                    navController.popBackStack()
                     navController.navigate("main_route")
                 }
             )
@@ -51,7 +53,10 @@ fun ApplicationNavHost(
         composable(
             "register_client_route",
         ) {
-            RegisterClientRoute()
+            RegisterClientRoute(onUserLoggedIn = {
+                navController.popBackStack()
+                navController.navigate("main_route")
+            })
         }
 
         composable(
@@ -60,6 +65,13 @@ fun ApplicationNavHost(
             MainRoute(
                 onJoinConsultation = {
                     navController.navigate("video_route/$it")
+                },
+                onLogOutClicked = {
+                    navController.popBackStack()
+                    navController.navigate("login_client_route")
+                },
+                onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }

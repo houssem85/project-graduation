@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.programasoft.presentation.accountbalancetransaction
 
@@ -65,6 +65,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.data.network.model.TransactionResponse
+import com.programasoft.presentation.utils.roboto
 import java.text.DecimalFormat
 
 
@@ -127,11 +128,15 @@ fun AccountBalanceTransactionScreen(
             ) {
                 Text(
                     text = priceFormat(uiState.balance),
+                    fontFamily = roboto,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White,
                     fontSize = 30.sp
                 )
                 Text(
                     text = "Account Balance",
+                    fontFamily = roboto,
+                    fontWeight = FontWeight.Normal,
                     color = Color.White,
                     fontSize = 18.sp
                 )
@@ -170,11 +175,15 @@ fun AccountBalanceTransactionScreen(
                     Text(
                         text = priceFormat(uiState.creditBalance),
                         color = Color.Black,
-                        fontSize = 24.sp
+                        fontFamily = roboto,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp
                     )
                     Text(
                         text = "Credits Balance",
                         color = Color(0xFF3F5AA6),
+                        fontFamily = roboto,
+                        fontWeight = FontWeight.Normal,
                         fontSize = 18.sp
                     )
                 }
@@ -187,19 +196,23 @@ fun AccountBalanceTransactionScreen(
                     Text(
                         text = priceFormat(uiState.debitBalance),
                         color = Color.Black,
-                        fontSize = 24.sp
+                        fontFamily = roboto,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp
                     )
                     Text(
                         text = "Debits Balance",
                         color = Color(0xFF3F5AA6),
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        fontFamily = roboto,
+                        fontWeight = FontWeight.Normal
                     )
                 }
             }
             val historyTitle = createRef()
             Box(modifier = Modifier
                 .height(40.dp)
-                .background(Color(0xFFAEAEAE))
+                .background(Color(0xFF3F8EA6))
                 .constrainAs(historyTitle) {
                     top.linkTo(negativePositiveSection.bottom)
                     start.linkTo(parent.start)
@@ -211,7 +224,10 @@ fun AccountBalanceTransactionScreen(
                     text = "History", modifier = Modifier
                         .align(Alignment.CenterStart)
                         .padding(start = 20.dp),
-                    color = Color.White
+                    color = Color.White,
+                    fontFamily = roboto,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 18.sp
                 )
             }
             val list = createRef()
@@ -370,13 +386,14 @@ fun CustomDialog(value: String, setShowDialog: (Boolean) -> Unit, setValue: (Dou
 fun ListItem(model: TransactionResponse) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(6.dp),
         modifier = Modifier
             .height(60.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xffd2c59f)
-        )
+            containerColor = Color.White,
+        ),
+        border = BorderStroke(1.dp, Color(0xFF3F8EA6))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -387,11 +404,16 @@ fun ListItem(model: TransactionResponse) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = model.type.lowercase().capitalize(), color = Color(0xFF3F5AA6))
+                Text(
+                    text = model.type.lowercase().capitalize()
+                        .replace("_", " "), color = Color(0xFF3F5AA6)
+                )
                 Text(text = model.date.replace("T", " ").replace("+00:00", ""), color = Color.Black)
             }
             Text(
                 text = priceFormat(value = model.amount.toDouble()),
+                fontFamily = roboto,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (model.type == "DEPOSIT") Color(0xFF007500) else Color(0xFFD10000)
             )
