@@ -276,7 +276,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("sunday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("sunday", it)
                             }
                         }
                     }
@@ -301,7 +301,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("monday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("monday", it)
                             }
                         }
                     }
@@ -326,7 +326,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("tuesday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("tuesday", it)
                             }
                         }
                     }
@@ -351,7 +351,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("wednesday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("wednesday", it)
                             }
                         }
                     }
@@ -376,7 +376,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("thursday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("thursday", it)
                             }
                         }
                     }
@@ -401,7 +401,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("friday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("friday", it)
                             }
                         }
                     }
@@ -426,7 +426,7 @@ fun NewAvailabilityGroupScreen(
                         uiState.days.get("saturday")!!.forEach {
                             Spacer(modifier = Modifier.size(10.dp))
                             AvailabilityItem(model = it) {
-                                onClickDelete.invoke(keyDayForAdd, it)
+                                onClickDelete.invoke("saturday", it)
                             }
                         }
                     }

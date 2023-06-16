@@ -48,12 +48,12 @@ class LoginClientViewModel @Inject constructor(
                         }
                     } else {
                         _uiState.update {
-                            it.copy(isLoading = false, errorMessage = "not allowed")
+                            it.copy(isLoading = false, errorMessage = "Not allowed")
                         }
                     }
                 } else {
                     _uiState.update {
-                        it.copy(isLoading = false, errorMessage = "wrong email or password")
+                        it.copy(isLoading = false, errorMessage = "Wrong email or password")
                     }
                 }
             } catch (ex: Exception) {

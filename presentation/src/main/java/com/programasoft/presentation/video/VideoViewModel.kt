@@ -20,7 +20,8 @@ class VideoViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<VideoUiState> = MutableStateFlow(VideoUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val reservationId: Long = checkNotNull(savedStateHandle["reservationId"])
+    // private val reservationId: Long = checkNotNull(savedStateHandle["reservationId"])
+    private val reservationId = 252L
 
     init {
         viewModelScope.launch {
