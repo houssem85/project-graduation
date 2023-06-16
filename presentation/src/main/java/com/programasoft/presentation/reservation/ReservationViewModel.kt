@@ -115,7 +115,7 @@ class ReservationViewModel @Inject constructor(
         }
     }
 
-    fun validate(clientId : Long) {
+    fun validate(clientId: Long) {
         val test = areSelectedAvailabilityUnitsAdjacent(
             _uiState.value.availabilityUnits
         )
@@ -182,7 +182,8 @@ class ReservationViewModel @Inject constructor(
 }
 
 private fun String.toTimeStamp(): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    dateFormat.timeZone = TimeZone.getTimeZone("UTC")
     val date = dateFormat.parse(this)
     return date.time
 }

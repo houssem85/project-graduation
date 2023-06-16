@@ -6,11 +6,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.programasoft.application.main.MainRoute
 import com.programasoft.presentation.login.LoginClientRoute
 import com.programasoft.presentation.register.RegisterClientRoute
+import com.programasoft.presentation.video.VideoRoute
 
 @Composable
 fun ApplicationNavHost(
@@ -21,8 +24,8 @@ fun ApplicationNavHost(
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         val sharedPref = context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
-        val clientId = sharedPref.getLong("client_id",0)
-        if(clientId != 0L){
+        val clientId = sharedPref.getLong("client_id", 0)
+        if (clientId != 0L) {
             navController.navigate("main_route")
         }
     }
@@ -54,7 +57,17 @@ fun ApplicationNavHost(
         composable(
             "main_route",
         ) {
-            MainRoute()
+            MainRoute(
+                onJoinConsultation = {
+                    navController.navigate("video_route/$it")
+                }
+            )
+        }
+        composable(
+            "video_route/{reservationId}",
+            arguments = listOf(navArgument("reservationId") { type = NavType.LongType })
+        ) {
+            VideoRoute()
         }
     }
 }

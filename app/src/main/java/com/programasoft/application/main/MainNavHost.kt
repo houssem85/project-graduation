@@ -14,12 +14,14 @@ import com.programasoft.presentation.psychologistprofile.PsychologistProfileRout
 import com.programasoft.presentation.psychologists.PsychologistsRoute
 import com.programasoft.presentation.reservation.ReservationRoute
 import com.programasoft.presentation.reservations.ReservationsRoute
+import com.programasoft.presentation.video.VideoRoute
 
 @Composable
 fun MainNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     startDestination: String = "psychologists_route",
+    onJoinConsultation: (Long) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -78,7 +80,7 @@ fun MainNavHost(
         composable(
             "join_route",
         ) {
-            JoinRoute()
+            JoinRoute(onJoinConsultation = onJoinConsultation)
         }
     }
 }

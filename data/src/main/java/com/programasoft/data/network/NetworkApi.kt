@@ -115,4 +115,9 @@ interface NetworkApi {
     suspend fun getReadyReservations(
         @Path("clientId") clientId: Long
     ): Response<List<ReservationReadyResponse>>
+
+    @GET("reservations/timeEnd/{id}")
+    suspend fun getReservationEndTime(
+        @Path("id") reservationId: Long
+    ): Response<Long>
 }

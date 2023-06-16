@@ -70,4 +70,9 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
     implementation libs.accompanist.webview
+
+    implementation libs.accompanist.permissions
+
+    implementation "com.github.AgoraIO-Community.Android-UIKit:final:v2.0.6"
+    //implementation "io.agora.rtc:full-sdk:4.2.0"
 }

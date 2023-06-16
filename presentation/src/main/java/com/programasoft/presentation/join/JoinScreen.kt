@@ -37,7 +37,8 @@ import com.programasoft.data.network.model.ReservationReadyResponse
 
 @Composable
 fun JoinRoute(
-    viewModel: JoinViewModel = hiltViewModel()
+    viewModel: JoinViewModel = hiltViewModel(),
+    onJoinConsultation: (Long) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,13 +51,15 @@ fun JoinRoute(
     }
 
     JoinScreen(
-        uiState
+        uiState,
+        onJoinConsultation
     )
 }
 
 @Composable
 fun JoinScreen(
-    uiState: JoinUiState
+    uiState: JoinUiState,
+    onJoinConsultation: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -85,10 +88,10 @@ fun JoinScreen(
         ) {
             items(uiState.items) {
                 ListItem(
-                    it, {
-
-                    }
-                )
+                    it
+                ) {
+                    onJoinConsultation.invoke(it)
+                }
             }
         }
     }

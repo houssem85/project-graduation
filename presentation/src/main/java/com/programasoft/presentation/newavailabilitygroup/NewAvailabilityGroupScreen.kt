@@ -60,6 +60,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @Composable
 fun NewAvailabilityGroupRoute(
@@ -119,16 +120,30 @@ fun NewAvailabilityGroupScreen(
     val startDatePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val currentDate = System.currentTimeMillis()
-                return utcTimeMillis >= currentDate
+                val calendar = Calendar.getInstance().apply {
+                    timeInMillis = System.currentTimeMillis()
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val startOfDayMillis = calendar.timeInMillis
+                return utcTimeMillis >= startOfDayMillis
             }
         }
     )
     val endDatePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val currentDate = System.currentTimeMillis()
-                return utcTimeMillis >= currentDate
+                val calendar = Calendar.getInstance().apply {
+                    timeInMillis = System.currentTimeMillis()
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val startOfDayMillis = calendar.timeInMillis
+                return utcTimeMillis >= startOfDayMillis
             }
         }
     )
