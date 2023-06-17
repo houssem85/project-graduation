@@ -415,7 +415,7 @@ fun ListItem(model: TransactionResponse) {
                 fontFamily = roboto,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (model.type == "DEPOSIT") Color(0xFF007500) else Color(0xFFD10000)
+                color = if (model.amount > 0) Color(0xFF007500) else Color(0xFFD10000)
             )
             Spacer(modifier = Modifier.size(10.dp))
         }

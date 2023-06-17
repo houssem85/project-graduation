@@ -1,5 +1,6 @@
 package com.programasoft.presentation.video
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,9 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,19 +33,18 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import io.agora.agorauikit_android.AgoraConnectionData
 import io.agora.agorauikit_android.AgoraSettings
 import io.agora.agorauikit_android.AgoraVideoViewer
-import kotlinx.coroutines.delay
-import java.util.Calendar
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
+import io.agora.rtc.Constants
 
 @Composable
 fun VideoRoute(
-    viewModel: VideoViewModel = hiltViewModel()
+    viewModel: VideoViewModel = hiltViewModel(),
+    onClickBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     VideoScreen(
-        uiState
+        uiState,
+        onClickBack
     )
 }
 
@@ -55,34 +52,39 @@ fun VideoRoute(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun VideoScreen(
-    uiState: VideoUiState
+    uiState: VideoUiState,
+    onClickBack: () -> Unit
 ) {
 
-    val permissionsState = rememberMultiplePermissionsState(
-        listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO)
-    )
+    val permissionsState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        rememberMultiplePermissionsState(
+            listOf(
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.RECORD_AUDIO,
+                android.Manifest.permission.BLUETOOTH_CONNECT
+            ),
+        )
+    } else {
+        rememberMultiplePermissionsState(
+            listOf(
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.RECORD_AUDIO
+            ),
+        )
+    }
 
     LaunchedEffect(Unit) {
         permissionsState.launchMultiplePermissionRequest()
     }
 
     if (permissionsState.permissions.first().status.isGranted) {
-        if (uiState.endTime != 0L && uiState.reservationId != 0L) {
+        if (uiState.remainingTimeInMinutes != 0L && uiState.reservationId != 0L) {
             var agoraViewer: AgoraVideoViewer? = null
-            var currentTime: Long by remember {
-                val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-                mutableStateOf(calendar.timeInMillis)
-            }
-            LaunchedEffect(Unit) {
-                while (true) {
-                    val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-                    currentTime = calendar.timeInMillis
-                    delay(1000)
+
+            LaunchedEffect(uiState.remainingTimeInMinutes) {
+                if (uiState.remainingTimeInMinutes <= 0L) {
+                    onClickBack.invoke()
                 }
-            }
-            var time: Long by remember(currentTime) {
-                val value = uiState.endTime - currentTime
-                mutableStateOf(value)
             }
             Column(modifier = Modifier.fillMaxSize()) {
                 Box(
@@ -99,11 +101,12 @@ fun VideoScreen(
                             .padding(start = 10.dp)
                             .clickable {
                                 agoraViewer?.leaveChannel()
+                                onClickBack.invoke()
                             },
                         tint = Color.White
                     )
                     Text(
-                        text = convertMillisToTime(time),
+                        text = convertMinutesToHHMM(uiState.remainingTimeInMinutes),
                         color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
@@ -119,8 +122,13 @@ fun VideoScreen(
                         ), agoraSettings = settings
                     ).also {
                         agoraViewer = it
-                        it.join(uiState.reservationId.toString())
+                        it.join(
+                            uiState.reservationId.toString(),
+                            role = Constants.CLIENT_ROLE_BROADCASTER
+                        )
                     }
+                }, update = {
+                    agoraViewer = it
                 }, modifier = Modifier.weight(1f))
             }
             BackHandler {
@@ -139,10 +147,8 @@ fun VideoScreen(
 }
 
 @Composable
-fun convertMillisToTime(milliseconds: Long): String {
-    val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
-    val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60
-    val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60
-
-    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+fun convertMinutesToHHMM(minutes: Long): String {
+    val hours = minutes / 60
+    val remainingMinutes = minutes % 60
+    return String.format("%02d:%02d", hours, remainingMinutes)
 }

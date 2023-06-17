@@ -79,7 +79,11 @@ fun ApplicationNavHost(
             "video_route/{reservationId}",
             arguments = listOf(navArgument("reservationId") { type = NavType.LongType })
         ) {
-            VideoRoute()
+            VideoRoute(
+                onClickBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.programasoft.presentation.join
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,8 +42,7 @@ import com.programasoft.data.network.model.ReservationReadyResponse
 
 @Composable
 fun JoinRoute(
-    viewModel: JoinViewModel = hiltViewModel(),
-    onJoinConsultation: (Long) -> Unit
+    viewModel: JoinViewModel = hiltViewModel(), onJoinConsultation: (Long) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,15 +55,13 @@ fun JoinRoute(
     }
 
     JoinScreen(
-        uiState,
-        onJoinConsultation
+        uiState, onJoinConsultation
     )
 }
 
 @Composable
 fun JoinScreen(
-    uiState: JoinUiState,
-    onJoinConsultation: (Long) -> Unit
+    uiState: JoinUiState, onJoinConsultation: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -105,23 +107,30 @@ fun ListItem(model: ReservationReadyResponse, onJoinClick: (Long) -> Unit) {
         modifier = Modifier
             .height(80.dp)
             .fillMaxWidth(),
+        border = BorderStroke(
+            color = Color(0xFF3F8EA6), width = 1.dp
+        ),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xffd2c59f)
+            containerColor = Color.White
         )
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxSize()
+            verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxSize()
         ) {
+            Spacer(modifier = Modifier.size(10.dp))
+            Image(
+                modifier = Modifier.size(40.dp),
+                imageVector = Icons.Filled.VideoCall,
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(color = Color(0xFF3F8EA6))
+            )
             Spacer(modifier = Modifier.size(10.dp))
             Column(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = model.psychologist, color = Color(0xFF3F5AA6))
                 Text(
-                    text = model.startTime + " -> " + model.endTime,
-                    color = Color.Black
+                    text = model.startTime + " -> " + model.endTime, color = Color.Black
                 )
             }
             if (model.isReadyForJoin) {
@@ -129,16 +138,12 @@ fun ListItem(model: ReservationReadyResponse, onJoinClick: (Long) -> Unit) {
                     Button(
                         onClick = {
                             onJoinClick.invoke(model.id)
-                        },
-                        colors = ButtonDefaults.buttonColors(
+                        }, colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(6.dp)
+                        ), shape = RoundedCornerShape(6.dp)
                     ) {
                         Text(
-                            text = "Join",
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF3F5AA6)
+                            text = "Join", fontWeight = FontWeight.Bold, color = Color(0xFF3F5AA6)
                         )
                     }
                 }

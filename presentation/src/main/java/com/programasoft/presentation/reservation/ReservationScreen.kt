@@ -2,7 +2,9 @@ package com.programasoft.presentation.reservation
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
@@ -29,6 +33,7 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -38,14 +43,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.presentation.utils.roboto
+import io.github.farhanroy.composeawesomedialog.SuccessHeader
+import io.github.farhanroy.composeawesomedialog.components.OkButton
 
 @Composable
 fun ReservationRoute(
@@ -56,11 +65,13 @@ fun ReservationRoute(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState.isReservationSuccess) {
-        if (uiState.isReservationSuccess) {
-            Toast.makeText(context, "Success! Reservation complete", Toast.LENGTH_LONG).show()
-            onReservationSuccess()
-        }
+    if (uiState.isReservationSuccess) {
+        CustomSuccessDialog(
+            "Success!",
+            "Success! Reservation complete. Your reservation will be confirmed definitively upon making the payment in the 'Reservations' menu.",
+            {
+                onReservationSuccess()
+            })
     }
 
     ReservationScreen(
@@ -279,6 +290,74 @@ fun NonlazyGrid(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CustomSuccessDialog(
+    title: String = "",
+    desc: String = "",
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            Modifier
+                .width(300.dp)
+                .height(270.dp)
+        ) {
+            Column(
+                Modifier
+                    .width(300.dp)
+                    .height(270.dp)
+            ) {
+                Spacer(Modifier.height(36.dp))
+                Box(
+                    Modifier
+                        .width(300.dp)
+                        .height(270.dp)
+                        .background(color = Color.White, shape = RoundedCornerShape(10.dp))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(
+                            title.uppercase(),
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            desc,
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(fontSize = 16.sp)
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            OkButton(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .clickable {
+                                        onDismiss.invoke()
+                                    }
+                            )
+                        }
+                    }
+                }
+            }
+            SuccessHeader(
+                Modifier
+                    .size(72.dp)
+                    .align(Alignment.TopCenter)
+                    .border(
+                        border = BorderStroke(width = 5.dp, color = Color.White),
+                        shape = CircleShape
+                    )
+            )
         }
     }
 }
