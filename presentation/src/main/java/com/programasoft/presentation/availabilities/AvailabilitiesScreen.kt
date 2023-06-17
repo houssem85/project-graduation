@@ -1,6 +1,8 @@
 package com.programasoft.presentation.availabilities
 
 import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -38,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.data.network.model.AvailabilityGroup
 import com.programasoft.presentation.newavailabilitygroup.TimeInterval
+import com.programasoft.presentation.utils.roboto
 
 @Composable
 fun AvailabilitiesRoute(
@@ -54,15 +58,30 @@ fun AvailabilitiesRoute(
         viewModel.getData(psychologistId)
     }
 
+    LaunchedEffect(uiState.errorMessage) {
+        if (uiState.errorMessage != null) {
+            Toast.makeText(context, uiState.errorMessage, Toast.LENGTH_LONG).show()
+            viewModel.messageIsShown()
+        }
+    }
+
     AvailabilitiesScreen(
         uiState = uiState,
-        onAddClicked = onAddClicked
+        onAddClicked = onAddClicked,
+        onDeleteClicked = {
+            val sharedPref =
+                context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
+            val psychologistId = sharedPref.getLong("psychologist_id", 0)
+            viewModel.deleteAvailabilityGroup(it, psychologistId)
+        }
     )
 }
 
 @Composable
 fun AvailabilitiesScreen(
-    uiState: AvailabilitiesUiState, onAddClicked: () -> Unit
+    uiState: AvailabilitiesUiState,
+    onAddClicked: () -> Unit,
+    onDeleteClicked: (Long) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -75,6 +94,7 @@ fun AvailabilitiesScreen(
                 Text(
                     text = "Availabilities",
                     color = Color.White,
+                    fontFamily = roboto,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.Center)
@@ -86,7 +106,7 @@ fun AvailabilitiesScreen(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(uiState.data) {
-                    AvailabilityGroupItem(it)
+                    AvailabilityGroupItem(it, onDeleteClicked = onDeleteClicked)
                 }
             }
         }
@@ -98,7 +118,7 @@ fun AvailabilitiesScreen(
                 onAddClicked.invoke()
             },
             containerColor = Color(0xFFA68B3F),
-            shape = RoundedCornerShape(16.dp),
+            shape = CircleShape,
         ) {
             Icon(
                 imageVector = Icons.Rounded.Add,
@@ -110,7 +130,10 @@ fun AvailabilitiesScreen(
 }
 
 @Composable
-fun AvailabilityGroupItem(model: AvailabilityGroup) {
+fun AvailabilityGroupItem(
+    model: AvailabilityGroup,
+    onDeleteClicked: (Long) -> Unit,
+) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
         shape = RoundedCornerShape(10.dp),
@@ -118,7 +141,11 @@ fun AvailabilityGroupItem(model: AvailabilityGroup) {
             .height(60.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xffd2c59f)
+            containerColor = Color.White
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Color(0xFF3F8EA6)
         )
     ) {
         Row(
@@ -136,6 +163,9 @@ fun AvailabilityGroupItem(model: AvailabilityGroup) {
                 imageVector = Icons.Filled.Delete,
                 tint = Color.Red,
                 contentDescription = null,
+                modifier = Modifier.clickable {
+                    onDeleteClicked.invoke(model.id)
+                }
             )
             Spacer(modifier = Modifier.size(10.dp))
         }

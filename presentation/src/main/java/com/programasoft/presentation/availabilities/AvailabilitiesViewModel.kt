@@ -53,6 +53,34 @@ class AvailabilitiesViewModel @Inject constructor(
             )
         }
     }
+
+    fun deleteAvailabilityGroup(psychologistId: Long, id: Long) {
+        viewModelScope.launch {
+            try {
+                val res = networkApi.deleteAvailabilityGroup(id)
+                if (res.code() == 200) {
+                    getData(psychologistId)
+                    _uiState.update {
+                        it.copy(
+                            errorMessage = "Success! The availability has been successfully deleted."
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            errorMessage = "Deletion Forbidden! This availability cannot be deleted as it is already reserved."
+                        )
+                    }
+                }
+            } catch (ex: Exception) {
+                _uiState.update {
+                    it.copy(
+                        errorMessage = ex.message!!
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class AvailabilitiesUiState(

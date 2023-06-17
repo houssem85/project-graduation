@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.presentation.R
+import com.programasoft.presentation.utils.roboto
 
 
 @Composable
@@ -84,7 +86,9 @@ fun LoginPsychologistScreen(
 
     ) {
         Text(
-            text = "sign in",
+            text = "Sign in",
+            fontFamily = roboto,
+            fontWeight = FontWeight.Bold,
             fontSize = 32.sp,
             color = Color(0xFF3F5AA6),
         )
@@ -98,7 +102,8 @@ fun LoginPsychologistScreen(
         )
         val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color(0xFF3F5AA6),
-            cursorColor = Color(0xFF3F5AA6)
+            cursorColor = Color(0xFF3F5AA6),
+            focusedLabelColor = Color(0xFF3F5AA6)
         )
         Spacer(modifier = Modifier.size(20.dp))
         OutlinedTextField(
@@ -135,15 +140,17 @@ fun LoginPsychologistScreen(
             colors = customButtonColors,
             onClick = onLogInClicked
         ) {
-            Text("Log in")
+            Text("Login", fontFamily = roboto, fontWeight = FontWeight.Bold, fontSize = 20.sp)
         }
         Spacer(modifier = Modifier.size(20.dp))
         if (uiState.errorMessage.isNotEmpty()) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = uiState.errorMessage,
+                fontFamily = roboto,
+                fontWeight = FontWeight.Normal,
                 color = Color.Red,
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
         }

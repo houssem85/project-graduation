@@ -5,6 +5,7 @@ package com.programasoft.presentation.newavailabilitygroup
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -56,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.programasoft.presentation.utils.roboto
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -65,7 +68,8 @@ import java.util.Calendar
 @Composable
 fun NewAvailabilityGroupRoute(
     viewModel: NewAvailabilityGroupViewModel = hiltViewModel(),
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     val uiState: NewAvailabilityGroupUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -81,7 +85,8 @@ fun NewAvailabilityGroupRoute(
         onChangeStartDate = viewModel::onSelectStartDate,
         onAddNewAvailability = viewModel::addAvailability,
         onClickDelete = viewModel::delete,
-        onClickOk = viewModel::createAvailabilities
+        onClickOk = viewModel::createAvailabilities,
+        onBackClicked = onBackClicked
     )
 }
 
@@ -95,6 +100,7 @@ fun NewAvailabilityGroupScreen(
     onAddNewAvailability: (String, TimeInterval) -> Unit,
     onClickDelete: (String, TimeInterval) -> Unit,
     onClickOk: (Long) -> Unit,
+    onBackClicked: () -> Unit,
 ) {
 
     var isTimeIntervalPickerShown by remember {
@@ -183,8 +189,20 @@ fun NewAvailabilityGroupScreen(
                     .fillMaxWidth()
                     .background(Color(0xFF3F5AA6))
             ) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBackIos,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 10.dp)
+                        .clickable {
+                            onBackClicked.invoke()
+                        },
+                    tint = Color.White
+                )
                 Text(
                     text = "Add New Availability",
+                    fontFamily = roboto,
                     color = Color.White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -205,7 +223,11 @@ fun NewAvailabilityGroupScreen(
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "Start Date")
+                        Text(
+                            text = "Start Date",
+                            fontFamily = roboto,
+                            fontWeight = FontWeight.Normal
+                        )
                         Spacer(
                             modifier = Modifier.size(10.dp)
                         )
@@ -232,7 +254,7 @@ fun NewAvailabilityGroupScreen(
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "End Date")
+                        Text(text = "End Date", fontFamily = roboto, fontWeight = FontWeight.Normal)
                         Spacer(
                             modifier = Modifier.size(10.dp)
                         )
@@ -457,10 +479,19 @@ fun NewAvailabilityGroupScreen(
                     shape = RoundedCornerShape(6.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp)
+                        .height(50.dp)
+                        .padding(horizontal = 20.dp)
                 ) {
-                    Text(text = "Submit")
+                    Text(
+                        text = "Submit",
+                        fontFamily = roboto,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
                 }
+            }
+            item {
+                Spacer(modifier = Modifier.size(20.dp))
             }
         } else {
             item {
@@ -573,15 +604,22 @@ fun HeaderDay(
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
-            .height(40.dp)
-            .background(Color(0xFF5873C0), RoundedCornerShape(6.dp))
+            .height(50.dp)
+            .background(Color(0xFF3F8EA6), RoundedCornerShape(6.dp))
             .clickable {
                 onClick.invoke()
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(modifier = Modifier.size(20.dp))
-        Text(text = text, color = Color.White, modifier = Modifier.weight(1f))
+        Text(
+            text = text,
+            color = Color.White,
+            modifier = Modifier.weight(1f),
+            fontFamily = roboto,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp
+        )
         Icon(imageVector = Icons.Filled.Add, contentDescription = null, tint = Color.White)
         Spacer(modifier = Modifier.size(20.dp))
     }
@@ -645,7 +683,11 @@ fun AvailabilityItem(model: TimeInterval, onClickDelete: (TimeInterval) -> Unit)
             .height(60.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xffd2c59f)
+            containerColor = Color.White
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Color(0xFF3F8EA6)
         )
     ) {
         Row(

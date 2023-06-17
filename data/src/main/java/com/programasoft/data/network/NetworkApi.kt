@@ -15,6 +15,7 @@ import com.programasoft.data.network.model.TransactionResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -120,4 +121,14 @@ interface NetworkApi {
     suspend fun getReservationEndTime(
         @Path("id") reservationId: Long
     ): Response<Long>
+
+    @GET("reservations/ready/psychologist/{psychologistId}")
+    suspend fun getReadyReservationsByPsychologist(
+        @Path("psychologistId") psychologistId: Long
+    ): Response<List<ReservationReadyResponse>>
+
+    @DELETE("availabilities/{id}")
+    suspend fun deleteAvailabilityGroup(
+        @Query("id") id: Long,
+    ): Response<ResponseBody>
 }

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.BookOnline
 import androidx.compose.material.icons.filled.EventNote
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Paid
+import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class TopLevelDestination(
@@ -12,6 +13,11 @@ enum class TopLevelDestination(
     val titleText: String,
     val screenRoute: String,
 ) {
+    HOME(
+        icon = Icons.Filled.VideoCall,
+        titleText = "Join",
+        screenRoute = "home_psychologist_route"
+    ),
     ACCOUNT_BALANCE(
         icon = Icons.Filled.Paid,
         titleText = "Account Balance",

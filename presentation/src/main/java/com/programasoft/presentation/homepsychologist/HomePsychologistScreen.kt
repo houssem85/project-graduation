@@ -1,9 +1,11 @@
-package com.programasoft.presentation.join
+package com.programasoft.presentation.homepsychologist
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +21,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VideoCall
+import androidx.compose.material.icons.outlined.ArrowBackIos
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,28 +46,32 @@ import com.programasoft.data.network.model.ReservationReadyResponse
 
 
 @Composable
-fun JoinRoute(
-    viewModel: JoinViewModel = hiltViewModel(), onJoinConsultation: (Long) -> Unit
+fun HomePsychologistRoute(
+    viewModel: HomePsychologistViewModel = hiltViewModel(),
+    onJoinConsultation: (Long) -> Unit,
+    onBackClicked: () -> Unit,
+    onLogOutClicked: () -> Unit,
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         val sharedPref = context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
-        val clientId = sharedPref.getLong("client_id", 0)
-        viewModel.loadData(clientId)
+        val psychologistId = sharedPref.getLong("psychologist_id", 0)
+        viewModel.loadData(psychologistId)
     }
 
-    JoinScreen(
-        uiState, onJoinConsultation
+    HomePsychologistScreen(
+        uiState, onJoinConsultation, onBackClicked, onLogOutClicked
     )
 }
 
 @Composable
-fun JoinScreen(
-    uiState: JoinUiState,
-    onJoinConsultation: (Long) -> Unit
+fun HomePsychologistScreen(
+    uiState: HomePsychologistUiState,
+    onJoinConsultation: (Long) -> Unit,
+    onBackClicked: () -> Unit,
+    onLogOutClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -73,6 +82,34 @@ fun JoinScreen(
                 .fillMaxWidth()
                 .background(Color(0xFF3F5AA6))
         ) {
+            val context = LocalContext.current
+            Icon(
+                imageVector = Icons.Outlined.Logout,
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 10.dp)
+                    .clickable {
+                        val sharedPref =
+                            context.getSharedPreferences("project-graduation", Context.MODE_PRIVATE)
+                        val editor: SharedPreferences.Editor = sharedPref.edit()
+                        editor.clear()
+                        editor.apply()
+                        onLogOutClicked.invoke()
+                    },
+                tint = Color.White
+            )
+            Icon(
+                imageVector = Icons.Outlined.ArrowBackIos,
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 10.dp)
+                    .clickable {
+                        onBackClicked.invoke()
+                    },
+                tint = Color.White
+            )
             Text(
                 text = "Today's Reservations",
                 color = Color.White,
@@ -129,7 +166,7 @@ fun ListItem(model: ReservationReadyResponse, onJoinClick: (Long) -> Unit) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = model.psychologist, color = Color(0xFF3F5AA6))
+                Text(text = model.client, color = Color(0xFF3F5AA6))
                 Text(
                     text = model.startTime + " -> " + model.endTime, color = Color.Black
                 )

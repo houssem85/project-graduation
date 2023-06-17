@@ -58,7 +58,7 @@ class LoginPsychologistViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.update {
-                        it.copy(isLoading = false, errorMessage = "wrong email or password")
+                        it.copy(isLoading = false, errorMessage = "Wrong email or password")
                     }
                 }
             } catch (ex: Exception) {
