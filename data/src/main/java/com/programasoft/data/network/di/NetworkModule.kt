@@ -20,7 +20,7 @@ object NetworkModule {
     @Singleton
     fun provideNetworkApi(callFactory: Call.Factory): NetworkApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.8.105:8080/api/v1/")
+            .baseUrl("http://192.168.8.103:8080/api/v1/")
             .callFactory(callFactory)
             .addConverterFactory(
                 GsonConverterFactory.create()

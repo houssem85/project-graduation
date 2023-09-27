@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
@@ -49,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.programasoft.presentation.R
 import com.programasoft.presentation.utils.roboto
+
 
 @Composable
 fun PsychologistsRoute(
@@ -166,11 +169,11 @@ fun PsychologistsScreen(
                     Spacer(modifier = Modifier.size(10.dp))
                     Row(
                     ) {
-                        if (it.image.toBitmap() != null) {
+                        if (atob(it.image).toBitmap() != null) {
                             Image(
                                 modifier = Modifier
                                     .size(60.dp),
-                                bitmap = it.image.toBitmap()!!.asImageBitmap(),
+                                bitmap = atob(it.image).toBitmap()!!.asImageBitmap(),
                                 contentDescription = null
                             )
                         } else {
@@ -244,3 +247,10 @@ fun String.toBitmap(): Bitmap? {
         return null
     }
 }
+
+fun atob(input: String): String {
+    val decodedBytes = Base64.decode(input, Base64.DEFAULT)
+    val result = String(decodedBytes)
+    return result.substringAfter(",")
+}
+
